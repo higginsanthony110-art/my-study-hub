@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#123b5d">
+<title>My Study Hub</title>
+<style>
+:root{--navy:#123b5d;--blue:#176b87;--mint:#dff4ec;--paper:#f4f7fa;--ink:#182632;--muted:#5b6b78;--gold:#f3c969;--red:#a83232}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+header{background:linear-gradient(120deg,var(--navy),var(--blue));color:white;padding:24px 18px}
+header h1{margin:0 0 5px;font-size:1.7rem}header p{margin:0;opacity:.92}
+nav{display:flex;gap:8px;overflow:auto;padding:10px;background:white;position:sticky;top:0;z-index:2;box-shadow:0 2px 8px #0001}
+nav button,.btn{border:0;border-radius:10px;padding:10px 13px;background:var(--navy);color:white;font-weight:650;cursor:pointer}
+nav button{white-space:nowrap;background:#e8eef3;color:var(--navy)}nav button.active{background:var(--navy);color:white}
+main{max-width:900px;margin:auto;padding:16px}.panel{background:white;border-radius:15px;padding:17px;margin:0 0 15px;box-shadow:0 2px 10px #142b3b0c}
+h2{margin:0 0 10px;color:var(--navy)}h3{margin:15px 0 8px;color:var(--blue)}
+small,.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+label{display:block;font-weight:650;margin:8px 0 4px}select,input,textarea{width:100%;padding:11px;border:1px solid #c7d3dc;border-radius:9px;background:white;font:inherit}
+textarea{min-height:110px}.btn{margin:8px 6px 0 0}.btn.secondary{background:#e8eef3;color:var(--navy)}.btn.gold{background:#8a5b00;color:white}
+.question{border:1px solid #d9e2e8;border-radius:12px;padding:14px;margin:12px 0}
+.option{display:flex;gap:9px;align-items:flex-start;padding:10px;border:1px solid #d5dfe6;border-radius:9px;margin:7px 0;cursor:pointer}
+.option:has(input:checked){border-color:var(--blue);background:#eef8fb}
+.feedback{padding:11px;border-radius:9px;margin-top:9px;background:var(--mint)}
+.correct{color:#14633f;font-weight:750}.wrong{color:var(--red);font-weight:750}
+.pill{display:inline-block;padding:3px 9px;border-radius:20px;background:#eaf1f6;color:var(--navy);font-size:.82rem;margin:2px}
+.hidden{display:none}.status{font-weight:700}.good{color:#14633f}.warn{color:#8a5b00}
+table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:9px;border-bottom:1px solid #e1e7eb;vertical-align:top}
+footer{text-align:center;padding:20px;color:var(--muted);font-size:.88rem}
+@media print{nav,.btn{display:none!important}body{background:white}.panel{box-shadow:none}}
+</style>
+</head>
+<body>
+<header><h1>My Study Hub</h1><p>Your timetable, daily practice, SAT preparation and Economics starter course — designed to work offline.</p></header>
+<nav>
+<button class="active" data-tab="home">Home</button><button data-tab="quiz">Daily test</button><button data-tab="timetable">Timetable</button><button data-tab="economics">Economics</button><button data-tab="notes">Notes</button><button data-tab="progress">Progress</button>
+</nav>
+<main>
+<section id="home" class="tab">
+<div class="panel"><h2>Welcome back!</h2><p id="today"></p><p>Choose <b>Daily test</b> to get a new mix from the question bank. The questions are selected and shuffled on your tablet, so the test can work without internet.</p><div><span class="pill">Offline question bank</span><span class="pill">Automatic marking</span><span class="pill">3 difficulty levels</span><span class="pill">Explanations after submission</span></div><p id="connection" class="status"></p></div>
+<div class="panel"><h2>Daily study reminder</h2><p>Because you wake very early, protect your sleep. Aim for a consistent bedtime that gives you about 8–10 hours of sleep.</p><p><b>Study tip:</b> Try 25 minutes of focused work, then take a short break. Review mistakes instead of only counting how many questions you finish.</p></div>
+<div class="panel"><h2>How daily tests work</h2><ul><li>Choose a subject and difficulty, or select Mixed practice.</li><li>Each test draws a fresh combination from the questions stored in this file.</li><li>Choose an answer for every question, then press <b>Submit test</b>.</li><li>Your score and explanations appear after submission.</li></ul><p class="muted">Important: Offline tests rotate questions from the built-in bank; they are not unlimited newly generated questions. To add genuinely new questions, get an updated question pack from ChatGPT while online and replace this file with the new version.</p></div>
+</section>
+<section id="quiz" class="tab hidden">
+<div class="panel"><h2>Daily test</h2><div class="grid">
+<div><label for="subject">Subject</label><select id="subject"><option value="Mixed">Mixed practice</option><option>Biology</option><option>Chemistry</option><option>Physics</option><option>Mathematics</option><option>SAT Math</option><option>SAT Reading & Writing</option><option>General Knowledge</option></select></div>
+<div><label for="level">Difficulty</label><select id="level"><option value="All">All levels</option><option>Easy</option><option>Intermediate</option><option>Challenging</option></select></div>
+<div><label for="count">Questions</label><select id="count"><option>10</option><option selected>15</option><option>20</option></select></div>
+</div><button class="btn" id="start">Start today's test</button><button class="btn secondary" id="reshuffle">New question mix</button><p class="muted" id="quizdate"></p></div>
+<div id="quizarea"></div>
+</section>
+<section id="timetable" class="tab hidden"><div class="panel"><h2>Weekly timetable</h2><p class="muted">Use this as a guide. Adjust it when school work or rest needs more time.</p>
+<table><tr><th>Day</th><th>Plan</th></tr>
+<tr><td>Monday–Friday</td><td>School day. After returning at about 4:30 pm: rest, eat, complete homework, then revise one main subject. Prepare your bag and materials before bedtime.</td></tr>
+<tr><td>Saturday</td><td>10:00 am–1:00 pm prep; 1:00–3:00 pm lunch/rest; 3:00–5:00 pm focused revision and formula-book updates; 6:30–9:00 pm prep.</td></tr>
+<tr><td>Sunday</td><td>10:00 am–1:00 pm prep; 1:00–2:00 pm lunch/rest; 2:00–3:00 pm weekly quiz/SAT practice; 3:00–5:00 pm review mistakes and plan; 6:30–9:00 pm prep.</td></tr></table>
+<p><b>Sleep matters:</b> With a 4:00 am wake-up, an 8:00 pm bedtime is a useful target for around eight hours of sleep. Avoid sacrificing sleep to finish extra questions.</p></div></section>
+<section id="economics" class="tab hidden"><div class="panel"><h2>Beginner Economics</h2>
+<h3>1. What is Economics?</h3><p>Economics studies how people, businesses and governments make choices when resources are limited and wants are many.</p>
+<h3>2. Scarcity and choice</h3><p><b>Scarcity</b> means resources are limited. Because of scarcity, people must make choices. The next best alternative given up is called <b>opportunity cost</b>.</p>
+<h3>3. Needs and wants</h3><p>Needs are essentials such as food, basic shelter and clean water. Wants are things people would like to have but can live without.</p>
+<h3>4. Factors of production</h3><p><b>Land</b> (natural resources), <b>labour</b> (human effort), <b>capital</b> (tools and equipment used to produce) and <b>enterprise</b> (organising production and taking business risks).</p>
+<h3>5. Demand and supply</h3><p>Demand is the quantity consumers are willing and able to buy at different prices. Supply is the quantity producers are willing and able to sell at different prices, other things being equal.</p>
+<h3>Quick review</h3><p>1. What is opportunity cost? 2. Name the four factors of production. 3. Give one example of a need and one want.</p></div></section>
+<section id="notes" class="tab hidden"><div class="panel"><h2>My notes</h2><p class="muted">Notes are saved in this browser on this tablet. They are not automatically synced to other devices.</p><textarea id="notesbox" placeholder="Write formulas, definitions, corrections or questions to ask your teacher..."></textarea><button class="btn" id="savenotes">Save notes</button><span id="notesstatus" class="muted"></span></div></section>
+<section id="progress" class="tab hidden"><div class="panel"><h2>My progress</h2><p id="stats">No tests completed yet.</p><div id="history"></div><button class="btn secondary" id="clearhistory">Clear test history</button></div></section>
+</main><footer>My Study Hub • Save this HTML file on your tablet and open it in your browser. It works offline after download.</footer>
+<script>
+const bank = [
+{ s:"Biology",d:"Easy",q:"Which cell structure controls most activities of the cell?",o:["Cell wall","Nucleus","Vacuole","Cytoplasm"],a:1,e:"The nucleus contains genetic material and controls many cell activities."},
+{ s:"Biology",d:"Easy",q:"Which process do green plants use to make glucose?",o:["Respiration","Transpiration","Photosynthesis","Digestion"],a:2,e:"Photosynthesis uses light energy to make glucose from carbon dioxide and water."},
+{ s:"Biology",d:"Intermediate",q:"Which blood component is mainly responsible for clotting?",o:["Red blood cells","Platelets","Plasma","White blood cells"],a:1,e:"Platelets help form clots that reduce blood loss."},
+{ s:"Biology",d:"Intermediate",q:"The movement of water through a partially permeable membrane from higher to lower water potential is:",o:["Diffusion","Osmosis","Active transport","Translocation"],a:1,e:"Osmosis is the net movement of water across a partially permeable membrane down a water-potential gradient."},
+{ s:"Biology",d:"Challenging",q:"In a monohybrid cross Aa × Aa, what fraction of offspring is expected to be aa?",o:["1/2","1/4","3/4","All"],a:1,e:"The combinations are AA, Aa, Aa and aa; one out of four is aa."},
+{ s:"Biology",d:"Challenging",q:"Which ecological pyramid is always upright?",o:["Pyramid of numbers","Pyramid of biomass","Pyramid of energy","All pyramids"],a:2,e:"Energy is lost between trophic levels, so available energy decreases up the food chain."},
+{ s:"Chemistry",d:"Easy",q:"What is the chemical symbol for sodium?",o:["So","S","Na","N"],a:2,e:"Na comes from the Latin name natrium."},
+{ s:"Chemistry",d:"Easy",q:"A substance with pH 2 is:",o:["Strongly acidic","Neutral","Alkaline","A salt only"],a:0,e:"A pH below 7 is acidic; pH 2 is strongly acidic."},
+{ s:"Chemistry",d:"Intermediate",q:"How many moles are in 18 g of water (H₂O)? [H=1, O=16]",o:["0.5 mol","1 mol","2 mol","18 mol"],a:1,e:"Molar mass H₂O = 2(1)+16 = 18 g/mol. Moles = 18/18 = 1."},
+{ s:"Chemistry",d:"Intermediate",q:"Which gas is produced when an acid reacts with a carbonate?",o:["Hydrogen","Oxygen","Carbon dioxide","Nitrogen"],a:2,e:"Acid + carbonate produces salt, water and carbon dioxide."},
+{ s:"Chemistry",d:"Challenging",q:"What is the oxidation number of sulfur in H₂SO₄?",o:["+2","+4","+6","−2"],a:2,e:"2(+1) + S + 4(−2) = 0, so S = +6."},
+{ s:"Chemistry",d:"Challenging",q:"At constant temperature, increasing pressure on a gaseous equilibrium favours the side with:",o:["More gas molecules","Fewer gas molecules","More solids","No molecules"],a:1,e:"By Le Chatelier's principle, increased pressure favours the side with fewer moles of gas."},
+{ s:"Physics",d:"Easy",q:"What is the SI unit of force?",o:["Joule","Watt","Newton","Pascal"],a:2,e:"Force is measured in newtons (N)."},
+{ s:"Physics",d:"Easy",q:"Which instrument measures electric current?",o:["Voltmeter","Ammeter","Thermometer","Barometer"],a:1,e:"An ammeter measures current and is connected in series."},
+{ s:"Physics",d:"Intermediate",q:"A car travels 150 m in 10 s. What is its average speed?",o:["10 m/s","15 m/s","25 m/s","1500 m/s"],a:1,e:"Speed = distance/time = 150/10 = 15 m/s."},
+{ s:"Physics",d:"Intermediate",q:"What happens to the resistance of a typical metal wire as its temperature rises?",o:["It usually increases","It becomes zero","It always halves","It is unchanged"],a:0,e:"In a metal, greater lattice vibrations make electron flow more difficult, increasing resistance."},
+{ s:"Physics",d:"Challenging",q:"A 2 kg object accelerates at 3 m/s². What resultant force acts on it?",o:["1.5 N","5 N","6 N","9 N"],a:2,e:"Newton's second law: F = ma = 2 × 3 = 6 N."},
+{ s:"Physics",d:"Challenging",q:"A 12 V supply is connected across a 4 Ω resistor. What current flows?",o:["0.33 A","3 A","8 A","48 A"],a:1,e:"Ohm's law: I = V/R = 12/4 = 3 A."},
+{ s:"Mathematics",d:"Easy",q:"Evaluate 3² + 4.",o:["10","13","16","49"],a:1,e:"3² = 9; 9 + 4 = 13."},
+{ s:"Mathematics",d:"Easy",q:"What is 25% of 80?",o:["10","15","20","25"],a:2,e:"25% is one quarter; 80 ÷ 4 = 20."},
+{ s:"Mathematics",d:"Intermediate",q:"Solve 3x − 7 = 11.",o:["4","5","6","7"],a:2,e:"Add 7: 3x = 18. Divide by 3: x = 6."},
+{ s:"Mathematics",d:"Intermediate",q:"The angles in a triangle are 2x, 3x and 4x. Find x.",o:["10°","15°","20°","30°"],a:2,e:"2x+3x+4x=180°, so 9x=180° and x=20°."},
+{ s:"Mathematics",d:"Challenging",q:"If f(x)=2x²−3, find f(−2).",o:["−11","1","5","11"],a:2,e:"f(−2)=2(4)−3=8−3=5, so option C is correct."},
+{ s:"Mathematics",d:"Challenging",q:"A bag has 3 red and 5 blue balls. What is the probability of choosing a red ball at random?",o:["3/5","5/8","3/8","1/3"],a:2,e:"There are 8 balls in total and 3 are red, so the probability is 3/8."},
+{ s:"SAT Math",d:"Easy",q:"If 5x = 35, what is x?",o:["5","6","7","8"],a:2,e:"Divide both sides by 5: x = 7."},
+{ s:"SAT Math",d:"Intermediate",q:"A jacket costs $60 and is discounted by 20%. What is the sale price?",o:["$12","$40","$48","$52"],a:2,e:"20% of 60 is 12; 60−12 = $48."},
+{ s:"SAT Math",d:"Challenging",q:"For y=3x+2, what is y when x=−4?",o:["−14","−10","−6","14"],a:1,e:"y=3(−4)+2=−12+2=−10."},
+{ s:"SAT Reading & Writing",d:"Easy",q:"Choose the clearest sentence.",o:["The results was surprising.","The results were surprising.","The results is surprising.","The results be surprising."],a:1,e:"The plural subject 'results' takes the plural verb 'were'."},
+{ s:"SAT Reading & Writing",d:"Intermediate",q:"Which transition best shows a contrast? 'The first method is quick; ___, it is less accurate.'",o:["Furthermore","However","For example","Similarly"],a:1,e:"'However' signals a contrast between speed and accuracy."},
+{ s:"SAT Reading & Writing",d:"Challenging",q:"A passage says a small study 'suggests' a link but calls for more research. Which conclusion is best supported?",o:["The link is proven","The link is impossible","The evidence is preliminary","No study was conducted"],a:2,e:"'Suggests' and the call for more research indicate tentative, not conclusive, evidence."},
+{ s:"General Knowledge",d:"Easy",q:"What is the capital city of Ghana?",o:["Kumasi","Accra","Tamale","Cape Coast"],a:1,e:"Accra is the capital of Ghana."},
+{ s:"General Knowledge",d:"Easy",q:"Which is the largest ocean on Earth?",o:["Atlantic","Indian","Arctic","Pacific"],a:3,e:"The Pacific Ocean is the largest."},
+{ s:"General Knowledge",d:"Intermediate",q:"Which branch of government is primarily responsible for interpreting laws?",o:["Executive","Legislature","Judiciary","Civil service"],a:2,e:"The judiciary interprets and applies the law."},
+{ s:"General Knowledge",d:"Intermediate",q:"In economics, opportunity cost means:",o:["The total money earned","The next best alternative forgone","A tax paid by firms","The cost of all resources"],a:1,e:"Opportunity cost is the value of the next best alternative sacrificed when a choice is made."},
+{ s:"General Knowledge",d:"Challenging",q:"If demand rises while supply stays the same, what usually happens to equilibrium price?",o:["It falls","It rises","It stays at zero","It must be unchanged"],a:1,e:"An increase in demand usually raises equilibrium price and quantity, assuming other factors stay constant."}
+];
+const $=id=>document.getElementById(id);
+let current=[],submitted=false;
+function shuffle(a){let b=[...a];for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+function showTab(id){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('hidden',x.id!==id));document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));if(id==="progress")renderProgress()}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+function makeTest(){let s=$('subject').value,l=$('level').value,n=+$('count').value;let pool=bank.filter(q=>(s==="Mixed"||q.s===s)&&(l==="All"||q.d===l));if(!pool.length){$('quizarea').innerHTML='<div class="panel">No questions match this selection. Choose another difficulty.</div>';return}
+current=shuffle(pool).slice(0,Math.min(n,pool.length));submitted=false;$('quizdate').textContent="Question mix created: "+new Date().toLocaleString();$('quizarea').innerHTML=current.map((q,i)=>`<div class="question" id="q${i}"><span class="pill">${q.s}</span><span class="pill">${q.d}</span><h3>${i+1}. ${q.q}</h3>${q.o.map((v,j)=>`<label class="option"><input type="radio" name="ans${i}" value="${j}"><span><b>${"ABCD"[j]}.</b> ${v}</span></label>`).join('')}<div class="feedback hidden" id="fb${i}"></div></div>`).join('')+`<div class="panel"><button class="btn gold" id="submit">Submit test and see score</button><p id="result"></p></div>`;
+$('submit').onclick=markTest;window.scrollTo({top:0,behavior:'smooth'})}
+function markTest(){if(submitted)return;submitted=true;let score=0;current.forEach((q,i)=>{let pick=document.querySelector(`input[name="ans${i}"]:checked`);let val=pick?+pick.value:-1;if(val===q.a)score++;document.querySelectorAll(`input[name="ans${i}"]`).forEach(x=>x.disabled=true);let fb=$('fb'+i);fb.classList.remove('hidden');fb.innerHTML=`<span class="${val===q.a?'correct':'wrong'}">${val===q.a?'Correct':'Not quite'}.</span> Answer: <b>${"ABCD"[q.a]}. ${q.o[q.a]}</b><br>${q.e}`});$('result').innerHTML=`<b>Your score: ${score} / ${current.length} (${Math.round(score/current.length*100)}%)</b><br>${score===current.length?'Excellent work!':score/current.length>=.7?'Good effort. Review the explanations for the questions you missed.':'Keep practising. Read each explanation and try again later.'}`;let hist=JSON.parse(localStorage.getItem('studyHistory')||'[]');hist.unshift({date:new Date().toLocaleString(),score,total:current.length,subject:$('subject').value,level:$('level').value});localStorage.setItem('studyHistory',JSON.stringify(hist.slice(0,30)))}
+$('start').onclick=makeTest;$('reshuffle').onclick=makeTest;
+function renderProgress(){let h=JSON.parse(localStorage.getItem('studyHistory')||'[]');$('stats').textContent=h.length?`${h.length} test(s) recorded. Average score: ${Math.round(h.reduce((a,x)=>a+x.score/x.total,0)/h.length*100)}%.`:"No tests completed yet."; $('history').innerHTML=h.map(x=>`<p>• ${x.date} — <b>${x.score}/${x.total}</b> (${x.subject}, ${x.level})</p>`).join('')}
+$('clearhistory').onclick=()=>{if(confirm('Clear saved test history?')){localStorage.removeItem('studyHistory');renderProgress()}};
+$('notesbox').value=localStorage.getItem('studyNotes')||'';$('savenotes').onclick=()=>{localStorage.setItem('studyNotes',$('notesbox').value);$('notesstatus').textContent='Saved on this tablet.'};
+$('today').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+$('connection').innerHTML=navigator.onLine?'<span class="good">● Internet connection detected.</span> The built-in test bank works offline too.':'<span class="warn">● You are offline.</span> Your timetable, lessons and built-in question bank remain available.';
+window.addEventListener('online',()=>location.reload());window.addEventListener('offline',()=>location.reload());
+</script>
+</body></html>
